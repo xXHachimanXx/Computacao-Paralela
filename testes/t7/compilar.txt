@@ -1,0 +1,9 @@
+ $ gcc -O3 -fopt-info-vec-optimized pi.c -o pi
+
+A flag -O3 habilita todas as otimizações de código 
+do compilador, inclusive a auto-vetorização do código, 
+se possível.
+A flag -fopt-info-vec-optimized mostra quais laços 
+foram vetorizados. Se nenhum laço foi vetorizado 
+(a saída foi vazia), a flag -fopt-info-vec-missed 
+informa os motivos pelos quais os laços não foram vetorizados.
