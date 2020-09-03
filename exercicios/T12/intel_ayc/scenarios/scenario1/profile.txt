@@ -1,0 +1,45 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  Ts/call  Ts/call  name    
+ 93.87      1.53     1.53                             compute_path(std::vector<Flight, std::allocator<Flight> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::vector<Travel, std::allocator<Travel> >&, unsigned long, unsigned long, Parameters)
+  1.84      1.56     0.03                             Flight::Flight(Flight const&)
+  1.23      1.58     0.02                             split_string(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char)
+  1.23      1.60     0.02                             void std::vector<Flight, std::allocator<Flight> >::_M_realloc_insert<Flight const&>(__gnu_cxx::__normal_iterator<Flight*, std::vector<Flight, std::allocator<Flight> > >, Flight const&)
+  0.61      1.61     0.01                             fill_travel(std::vector<Travel, std::allocator<Travel> >&, std::vector<Flight, std::allocator<Flight> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, unsigned long, unsigned long)
+  0.61      1.62     0.01                             parse_flight(std::vector<Flight, std::allocator<Flight> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+  0.61      1.63     0.01                             convert_string_to_timestamp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.

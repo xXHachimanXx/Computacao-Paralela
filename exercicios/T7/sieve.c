@@ -1,21 +1,24 @@
 /*
  * Adapted from: http://w...content-available-to-author-only...s.org/sieve-of-eratosthenes
+ *
+ * Programa testado no PARCODE
  * 
  * Tempo sequencial:
- * 
  * real	0m4.412s
  * user	0m4.318s
  * sys	0m0.080s
  * 
  * Tempo paralelo:
- * 
- * 
+ * real	0m3.659s
+ * user	0m6.781s
+ * sys	0m0.080s
+ *
  * Tempo paralelo com escalonamento:
- * 
+ * real	0m2.487s
+ * user	0m9.562s
+ * sys	0m0.084s
  * 
  */
-
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,6 +37,7 @@ int sieveOfEratosthenes(int n)
 
     memset(prime, true, (n + 1) * sizeof(bool));
 	
+	//#pragma omp parallel for 
 	#pragma omp parallel for schedule(dynamic)
     for (int p = 2; p <= sqrt_n; p++)
     {
@@ -51,8 +55,6 @@ int sieveOfEratosthenes(int n)
     for (int p = 2; p <= n; p++)
         if (prime[p])			
             primes++;
-
-	free(prime);
 
     return (primes);
 }

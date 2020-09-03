@@ -16,7 +16,7 @@ int main()
    for (i = 0; i < n; i++)
       in[i] = n - i;
 
-// Silly sort
+	// Silly sort
    #pragma omp parallel num_threads(nthreads) private(i, j)
    {
       int tid = omp_get_thread_num();
