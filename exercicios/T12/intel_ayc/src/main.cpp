@@ -170,7 +170,7 @@ float compute_cost(Travel &travel, vector<vector<string>> &alliances)
 {
   float result = 0;
   apply_discount(travel, alliances);
-
+//  #pragma omp parallel for private(result) reduction(+:result)
   for (unsigned int i = 0; i < travel.flights.size(); i++)
   {
     result += (travel.flights[i].cost * travel.flights[i].discout);
