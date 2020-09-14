@@ -3,7 +3,7 @@
 **********************************************************************/
 
 /************************* BIBLIOTECAS *******************************/
-#include <iostream.h>
+//#include <iostream.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
@@ -24,6 +24,8 @@
 
 #define MI              0.6
 #define TOLERANCIA	0.00001       // Número de erros consecutivos
+
+using namespace std;
 
 double BETA = MI;                     // Fator de ajuste das correcoes
 
