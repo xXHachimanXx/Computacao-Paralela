@@ -36,7 +36,7 @@ void mm(double *a, double *b, double *c, int width)
 
 int main()
 {
-  int width = 1000;
+  int width = 2000;
   double *a = (double *)malloc(width * width * sizeof(double));
   double *b = (double *)malloc(width * width * sizeof(double));
   double *c = (double *)malloc(width * width * sizeof(double));
