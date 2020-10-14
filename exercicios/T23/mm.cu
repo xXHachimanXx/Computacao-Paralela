@@ -40,27 +40,28 @@
  *
  * Tempo, warps_launched e warp_execution_efficiency CUDA: 
  *
- * real    0m0.797s
- * user    0m0.020s
- * sys     0m0.685s
+ * real    0m2.798s
+ * user    0m1.522s
+ * sys     0m1.189s
  *
- * ==32252== NVPROF is profiling process 32252, command: ./mmCU
- * ==32252== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
- * ==32252== Replaying kernel "mm_cuda(double*, double*, double*, int)" (done)           
- * ==32252== Profiling application: ./mmCU
- * ==32252== Profiling result:
- * ==32252== Event result:
- * Invocations                                Event Name         Min         Max         Avg       Total
- * Device "GeForce GT 1030 (0)"
- *    Kernel: mm_cuda(double*, double*, double*, int)
- * 	          1                            warps_launched         512         512         512         512
- * 
- * 			  ==32252== Metric result:
- * 			  Invocations                               Metric Name                        Metric Description         Min         Max         Avg
- * 			  Device "GeForce GT 1030 (0)"
- * 			      Kernel: mm_cuda(double*, double*, double*, int)
- * 				            1                 warp_execution_efficiency                 Warp Execution Efficiency      78.38%      78.38%      78.38%
- * 
+
+==5256== NVPROF is profiling process 5256, command: ./mmCU
+==5256== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+==5256== Replaying kernel "mm_cuda(double*, double*, double*, int)" (done)           
+==5256== Profiling application: ./mmCU
+==5256== Profiling result:
+==5256== Event result:
+Invocations                                Event Name         Min         Max         Avg       Total
+Device "GeForce GT 1030 (0)"
+    Kernel: mm_cuda(double*, double*, double*, int)
+	          1                            warps_launched      127008      127008      127008      127008
+
+			  ==5256== Metric result:
+			  Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+			  Device "GeForce GT 1030 (0)"
+			      Kernel: mm_cuda(double*, double*, double*, int)
+				            1                 warp_execution_efficiency                 Warp Execution Efficiency      99.21%      99.21%      99.21%
+
  *
  *
  */
@@ -69,16 +70,16 @@
 
 __global__ void mm_cuda(double* a, double* b, double* c, int width) 
 {
-//  #pragma omp parallel for schedule(dynamic)
-//	#pragma omp target map(to:a[0:width*width], b[0:width*width]) map(from:c[0:width*width])
-//	#pragma omp teams distribute parallel for simd
+	//  #pragma omp parallel for schedule(dynamic)
+	//	#pragma omp target map(to:a[0:width*width], b[0:width*width]) map(from:c[0:width*width])
+	//	#pragma omp teams distribute parallel for simd
 	int j = blockIdx.y*blockDim.y+threadIdx.y;
 	int i = blockIdx.x*blockDim.x+threadIdx.x;
 
 	if((i < width) && (j < width))
 	{	
 		double sum = 0;
-	    for (int k = 0; k < width; k++) 
+		for (int k = 0; k < width; k++) 
 		{
 			double x = a[i * width + k];
 			double y = b[k * width + j];
@@ -91,19 +92,19 @@ __global__ void mm_cuda(double* a, double* b, double* c, int width)
 
 int main()
 {
-	int width = 100;
+	int width = 2000;
 	double *a = (double*) malloc (width * width * sizeof(double));
-    double *b = (double*) malloc (width * width * sizeof(double));
-    double *c = (double*) malloc (width * width * sizeof(double));
-  
+	double *b = (double*) malloc (width * width * sizeof(double));
+	double *c = (double*) malloc (width * width * sizeof(double));
+
 	//#pragma omp parallel for schedule(dynamic)
-    for(int i = 0; i < width; i++) {	  
-      for(int j = 0; j < width; j++) {
-        a[i*width+j] = i;
-        b[i*width+j] = j;
-        c[i*width+j] = 0;
-      }
-    }
+	for(int i = 0; i < width; i++) {	  
+		for(int j = 0; j < width; j++) {
+			a[i*width+j] = i;
+			b[i*width+j] = j;
+			c[i*width+j] = 0;
+		}
+	}
 
 	int size = width*width*sizeof(double);
 	double *d_a, *d_b, *d_c;
@@ -114,23 +115,23 @@ int main()
 	cudaMalloc((void **) &d_b, size);
 	cudaMemcpy(d_b, b, size, cudaMemcpyHostToDevice);
 
-  	cudaMalloc((void **) &d_c, size);
+	cudaMalloc((void **) &d_c, size);
 
 	int block_size = 32;
-    dim3 dimGrid((width-1)/block_size+1, (width-1)/block_size+1, 1);
-    dim3 dimBlock(block_size, block_size, 1);
+	dim3 dimGrid((width-1)/block_size+1, (width-1)/block_size+1, 1);
+	dim3 dimBlock(block_size, block_size, 1);
 
-    mm_cuda<<<dimGrid, dimBlock>>>(d_a, d_b, d_c, width);
+	mm_cuda<<<dimGrid, dimBlock>>>(d_a, d_b, d_c, width);
 
 	cudaMemcpy(c, d_c, size, cudaMemcpyDeviceToHost);
-    
-   /*	
-    for(int i = 0; i < width; i++) {
-      for(int j = 0; j < width; j++) {
-        printf("\n c[%d][%d] = %lf",i,j,c[i*width+j]);
-      }
-    }
-	*/
+
+	/*	
+		for(int i = 0; i < width; i++) {
+		for(int j = 0; j < width; j++) {
+		printf("\n c[%d][%d] = %lf",i,j,c[i*width+j]);
+		}
+		}
+	 */
 
 	cudaFree(d_a);
 	cudaFree(d_b);
