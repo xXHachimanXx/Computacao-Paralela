@@ -1,0 +1,1 @@
+(time ./sum_cuda) 2> doc.txt

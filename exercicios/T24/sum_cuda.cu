@@ -61,7 +61,7 @@ int main()
   for(int i = 1; i < num_blocks; i++) 
     s[0] += s[i];
 
-  printf("\nSum = %f\n",s[0]);
+  //printf("\nSum = %f\n",s[0]);
   
   cudaFree(d_a);
   cudaFree(d_s);
