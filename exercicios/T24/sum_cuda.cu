@@ -65,4 +65,7 @@ int main()
   
   cudaFree(d_a);
   cudaFree(d_s);
+  free(a);
+  free(s);
+  a = s = NULL;
 }

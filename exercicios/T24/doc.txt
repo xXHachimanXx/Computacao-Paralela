@@ -9,3 +9,16 @@ sys	0m1.028s
 Time(%)      Time     Calls       Avg       Min       Max           Name
 95.41%     462.64ms     1       462.64ms  462.64ms  462.64ms  [CUDA memcpy HtoD]
  4.51%     21.872ms     1       21.872ms  21.872ms  21.872ms  sum_cuda(double*, double*, int)
+
+3) Tempo sequêncial
+real    0m0.557s
+user    0m0.334s
+sys     0m0.219s
+
+4) Tempo paralelo multicore com OpenMP
+real    0m0.230s
+user    0m0.491s
+sys     0m0.336s
+
+5) Tempo paralelo GPU com OpenMP
+

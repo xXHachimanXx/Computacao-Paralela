@@ -8,12 +8,13 @@ int main()
 	//int n = 400000;
 	double* vector = (double*) malloc(n * sizeof(double));
 	double sum = 0;
-	
-	#pragma omp parallel for simd	
+		
+	#pragma omp parallel for simd
 	for(int x = 0; x < n; ++x)
 		vector[x] = x;
-
-	#pragma omp parallel for simd reduction(+: sum) schedule(static, 100000)
+	
+	#pragma omp target map(tofrom: sum)
+	#pragma omp teams distribute parallel for simd reduction(+: sum) 
 	for(int y = 0; y < n; ++y)
 		sum += vector[y];
 	
