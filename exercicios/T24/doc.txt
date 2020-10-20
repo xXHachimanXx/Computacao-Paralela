@@ -38,4 +38,14 @@ Time(%)      Time     Calls       Avg       Min       Max  Name
  93.52%  463.44ms         1  463.44ms  463.44ms  463.44ms  [CUDA memcpy HtoD]
   6.41%  31.744ms         1  31.744ms  31.744ms  31.744ms  sum_cuda(double*, double*, int)
 
-OBS's.: Os temp
+Comentários:
+
+OpenMP com GPU x CUDA -> os tempos com CUDA são melhores pois é possível utilizar mais threads
+que o OpenMP. Devido limitação da última, muitas threads são desperdiçadas com operações redundantes.
+
+Com __shared__ x sem __shared__ -> Os tempos com shared são melhores pois aproveita-se da memória
+dos blocos que possuem acesso mais rápido do que a memória global.
+
+[CUDA memcpy HtoD] e sum_cuda(double*, double*, int) -> O maior overhead do programa é levar os dados
+do Host para o Device e não os cáculos em si. Por isso as versões sequêncial e multicore têm tempos 
+muito melhores.
