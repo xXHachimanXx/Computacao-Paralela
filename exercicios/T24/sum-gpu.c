@@ -13,8 +13,8 @@ int main()
 	for(int x = 0; x < n; ++x)
 		vector[x] = x;
 	
-	#pragma omp target map(tofrom: sum)
-	#pragma omp teams distribute parallel for simd reduction(+: sum) 
+
+	#pragma omp target teams distribute parallel for simd map(tofrom: sum) map(vector[0:n]) reduction(+: sum) 
 	for(int y = 0; y < n; ++y)
 		sum += vector[y];
 	

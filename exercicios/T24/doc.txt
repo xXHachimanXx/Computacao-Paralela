@@ -1,7 +1,8 @@
 1) Tempo programa somatório em cuda:
 real	0m1.652s
 user	0m0.538s
-sys	0m1.028s
+sys	    0m1.028s
+
 
 2) Tempo gasto nas funções [CUDA memcpy HtoD] e sum_cuda(double*, double*, int) 
 
@@ -21,4 +22,20 @@ user    0m0.491s
 sys     0m0.336s
 
 5) Tempo paralelo GPU com OpenMP
+O tempo aumentou por causa do overhead da transferência de dados do vetor para a gpu.
+real    0m2.285s
+user    0m1.318s
+sys     0m1.219s
 
+6) Tempo somatório em CUDA sem __shared__
+real    0m1.932s
+user    0m0.725s
+sys     0m1.102s
+
+
+==10877== Profiling result:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 93.52%  463.44ms         1  463.44ms  463.44ms  463.44ms  [CUDA memcpy HtoD]
+  6.41%  31.744ms         1  31.744ms  31.744ms  31.744ms  sum_cuda(double*, double*, int)
+
+OBS's.: Os temp
