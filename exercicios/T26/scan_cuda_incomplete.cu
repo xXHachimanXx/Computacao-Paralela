@@ -7,34 +7,51 @@
   * user    0m0.443s
   * sys     0m0.217s
   *
-  *
+  * Tempo CUDA:
+  * real    0m1.974s
+  * user    0m0.817s
+  * sys     0m1.063s
   * 
   */
 
 __global__ void scan_cuda(double* a, double *s, int width) {
-  // kernel scan
+ int t = threadIdx.x;
+ int b = blockIdx.x*blockDim.x; 
+ double x;
+
+ __shared__ double p[1024];
+
+ if(b+t < width)
+	 p[t] = a[b+t];
+
+ __syncthreads();
+
+ for(int i = 1; i < blockDim.x; i *= 2) {
+	  if(t >= i)
+		  x = p[t] + p[t-i];
+
+	  __syncthreads();
+
+	  if(t >= i)
+		  p[t] = x;
+
+	  __syncthreads();
+  }
+
+ if(b + t < width)
+	 a[b+t] = p[t];
+
+ if(t == blockDim.x-1)
+	 s[blockIdx.x+1] = a[b+t];
+
 } 
 
 __global__ void add_cuda(double *a, double *s, int width) {
   int t = threadIdx.x;                                                                                                           
   int b = blockIdx.x*blockDim.x; 
-  
-  __shared__ double o[1024];
-
-  if(b+t < width)
-	  o[t] = a[b+t];
-
-  __syncthreads();
-
-  for(i = blockDim.x/2; i > 0; i /= 2) {
-	  if(t < i && b+t+i < width)
-		  o[t] += o[t+i];
-
-	  __syncthreads();
-  }
-
-  if(t == 0)
-	  s[blockIdx.x] = o[0];
+ 
+  if(b+t < width) 
+	  a[b+t] += s[blockIdx.x];
 }
 
 int main()
@@ -56,7 +73,7 @@ int main()
 
   // alocar vetores "a" e "s" no device
   cudaMalloc((void **) &d_a, size);                                                                                              
-  cudaMalloc((void **) &d_s, s_size); 
+  cudaMalloc((void **) &d_s, size); 
 
   // copiar vetor "a" para o device
   cudaMemcpy(d_a, a, size, cudaMemcpyHostToDevice); 
@@ -77,7 +94,7 @@ int main()
     s[i] += s[i-1];
  
   // copiar vetor "s" para o device
-  cudaMemcpy(s, d_s, s_size, cudaMemcpyDeviceToHost); 
+  cudaMemcpy(d_s, s, s_size, cudaMemcpyHostToDevice); 
 
   // chamada do kernel da soma 
   add_cuda<<<dimGrid,dimBlock>>>(d_a, d_s, width);
